@@ -1,0 +1,27 @@
+#{extends 'main.html' /} 
+#{set title:'Tweets' /} 
+
+#{set 'secondaryContent'}
+
+#{renderFollowList user: controllers.Security.userConnected() /} 
+
+#{/set}
+
+#{ifErrors}
+	<div class="alert-message error">
+	#{errors}
+       <p>${error}</p>
+   #{/errors}
+	</div>
+#{/ifErrors}
+
+#{form @Twitter.create()}
+	<div class="clearfix">
+		<textarea class="xxlarge" name="tweet" rows="3"></textarea>
+	</div>
+	<input type="submit" class="btn primary" value="Tweet">
+#{/form}
+
+#{list items:tweets, as:'tweet'} 
+	#{renderTweet tweet /} 
+#{/list}

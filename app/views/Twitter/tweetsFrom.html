@@ -1,0 +1,21 @@
+#{extends 'main.html' /} 
+
+#{set title: play.i18n.Messages.get( "tweetsDe", username) /} 
+
+#{set 'secondaryContent'}
+
+	#{renderFollowList user: models.User.user(username) /} 
+
+#{/set}
+
+#{ifErrors}
+	<div class="alert-message error">
+	#{errors}
+       <p>${error}</p>
+   #{/errors}
+	</div>
+#{/ifErrors}
+
+#{list items:tweets, as:'tweet'} 
+	#{renderTweet tweet /} 
+#{/list}

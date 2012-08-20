@@ -1,0 +1,11 @@
+#{extends 'main.html' /} 
+#{set title:play.i18n.Messages.get( "estadisticas") /} 
+
+#{grafica items:user_tweets, 
+	      title:play.i18n.Messages.get( "tweetsDeUsuarios"), 
+	      xTitle:'Usuario', 
+	      yTitle:'Tweets', 
+	      id:'user_tweet', 
+	      width:500, 
+	      height:400 
+/}

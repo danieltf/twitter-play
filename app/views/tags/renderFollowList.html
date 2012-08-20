@@ -1,0 +1,40 @@
+*{
+Parametros:
+	- user (User)
+}*
+
+	<ul>
+		#{if _user.isUserConnected()}
+			<li>&{'sigoA'}:</li>
+		#{/if}
+		#{else}
+			
+			#{if !controllers.Security.userConnected().follows(_user.username)}
+				#{form @Twitter.follow(_user.username)}
+					<input type="submit" class="btn primary" value="&{'botonSigueA', _user.username}">
+				#{/form}
+			#{/if}
+			#{else}
+				#{form @Twitter.unfollow(_user.username)}
+					<input type="submit" class="btn error" value="&{'botonNoSigueA', _user.username}">
+				#{/form}
+			#{/else}
+			
+			<li>&{'sigueA', _user.username}:</li>	
+		#{/else}
+		
+		#{list items:_user.follows, as:'user'} 
+			<div><a href="@{Twitter.tweetsFrom(user.username)}">${user.username}</a></div>
+		#{/list}
+		
+		#{if _user.isUserConnected()}
+			<li>&{'meSiguen'}:</li>
+		#{/if}
+		#{else}
+			<li>&{'leSiguen', _user.username}:</li>	
+		#{/else}
+		
+		#{list items:_user.followers(), as:'user'} 
+			<div><a href="@{Twitter.tweetsFrom(user.username)}">${user.username}</a></div>
+		#{/list}
+	</ul>

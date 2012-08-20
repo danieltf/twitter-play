@@ -1,0 +1,18 @@
+#{extends 'main.html' /} 
+
+#{set title: play.i18n.Messages.get("todosTweets") /} 
+
+#{set 'secondaryContent'}
+#{/set}
+
+#{ifErrors}
+	<div class="alert-message error">
+	#{errors}
+       <p>${error}</p>
+   #{/errors}
+	</div>
+#{/ifErrors}
+
+#{list items:tweets, as:'tweet'} 
+	#{renderTweet tweet /} 
+#{/list}
