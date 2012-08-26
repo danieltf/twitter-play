@@ -4,6 +4,8 @@
 
 *      /                module:secure
 
+*	/pepe	Security.login2
+
 # Home page
 GET     /                                       Twitter.index
 GET     /stats									Twitter.stats

@@ -11,7 +11,11 @@ public class Security extends Secure.Security {
 	
 	static boolean authenticate(String username, String password) {
 		User user = User.find("byUsername", username).first();
-		return user != null && Crypto.encryptAES(password).equals(user.password);
+		if (user == null || !Crypto.encryptAES(password).equals(user.password)){
+			flash.put("open", "login");
+			return false;
+		}
+		return true;
 	}
 
 	// public static boolean check(String profile) {
@@ -29,46 +33,53 @@ public class Security extends Secure.Security {
 	}
 
 	public static void createAccount() {
+		render("Secure/login.html");
+	}
+	
+	
+	public static void login2(){
 		render();
 	}
+	
+//	SimpleEmail e = new SimpleEmail();
+//	try {
+//		e.setFrom("pepe@adios.com");
+//		e.addTo("danieltf@gmail.com");
+//		e.setSubject("subject");
+//		e.setMsg("Message");
+//		Mail.send(e); 
+//	} catch (EmailException e1) {
+//		e1.printStackTrace();
+//	}
 
-	public static void create(String username, String email, String password, String password2) {
-		
-		SimpleEmail e = new SimpleEmail();
-		try {
-			e.setFrom("pepe@adios.com");
-			e.addTo("danieltf@gmail.com");
-			e.setSubject("subject");
-			e.setMsg("Message");
-			Mail.send(e); 
-		} catch (EmailException e1) {
-			e1.printStackTrace();
+	
+	// VOLVER A PONER LA VALIDACION DEL EMAIL
+	
+	public static void create(String username2, String email, String password2, String password3) {
+		validation.required(username2);
+		validation.required(email);
+		validation.required(password2);
+		validation.required(password3);
+		if (User.user(username2) != null)
+			validation.addError("username2", "Usuario existente");
+//		validation.email("email", email).message("Formato incorrecto");
+		if (!password2.equals(password3))
+			validation.addError("password3", "Contraseña distinta");
+		if (validation.hasErrors()){
+			flash.error("No se ha podido crear la cuenta de usuario. Revise los campos.");
+			flash.put("open", "create");
+			validation.keep();
+			params.flash();
 		}
-		
-		
-//		validation.required(username);
-//		validation.required(email);
-//		validation.required(password);
-//		validation.required(password2);
-//		if (User.user(username) != null)
-//			validation.addError("usuario", "El nombre de usuario ya existe");
-//		validation.email("email", email);
-//		if (!password.equals(password2))
-//			validation.addError("password2", "Las contraseñas no coinciden");
-//		if (validation.hasErrors()){
-//			flash.error("No se ha podido crear la cuenta de usuario. Revise los campos.");
-//			validation.keep();
-//			params.flash();
-//			createAccount();
-//		}
-//		else{
-//			User user = new User(username, Crypto.encryptAES(password), email);
-//			user.save();
-//			flash.success("Se ha creado correctamente la cuenta para el usuario " + username);
-//			try {
-//				Secure.login();
-//			} catch (Throwable e) {}
-//		}
+		else{
+			User user = new User(username2, Crypto.encryptAES(password2), email);
+			user.save();
+			flash.success("Se ha creado correctamente el usuario " + username2 + ". Haz login  con tu nueva cuenta.");
+			flash.put("open", "login");
+		}
+		try {
+			Secure.login();
+		} catch (Throwable e) {}
 	}
 
 }
